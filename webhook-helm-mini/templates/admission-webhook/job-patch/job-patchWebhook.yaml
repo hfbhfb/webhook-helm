@@ -1,0 +1,49 @@
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+
+  namespace: {{ template "webhook-helm-mini.namespace" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded   
+  name: {{ template "webhook-helm-mini.fullname" . }}-admission-patch
+  labels:
+    app: {{ template "webhook-helm-mini.name" $ }}-admission-patch
+{{ include "webhook-helm-mini.labels" $ | indent 4 }}
+spec:
+  template:
+    metadata:
+      name:  {{ template "webhook-helm-mini.fullname" . }}-admission-patch
+      labels:
+        app: {{ template "webhook-helm-mini.name" $ }}-admission-patch
+{{ include "webhook-helm-mini.labels" $ | indent 8 }}
+    spec:
+      containers:
+        - name: patch
+          image: docker.io/sdedu/kube-webhook-certgen:v20230407
+          imagePullPolicy: IfNotPresent
+          args:
+            - patch
+            - --webhook-name={{ template "webhook-helm-mini.fullname" . }}-admission
+            - --namespace={{- template "webhook-helm-mini.namespace" . }}
+            - --secret-name={{ template "webhook-helm-mini.fullname" . }}-admission
+            - --patch-failure-policy=
+          securityContext:
+          
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            {}
+      restartPolicy: OnFailure
+      serviceAccountName: {{ template "webhook-helm-mini.fullname" . }}-admission
+      securityContext:
+        runAsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 2000
+        seccompProfile:
+          type: RuntimeDefault

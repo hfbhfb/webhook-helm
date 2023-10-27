@@ -1,0 +1,30 @@
+---
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ template "webhook-helm-mini.fullname" . }}-admission
+  labels:
+    app: {{ template "webhook-helm-mini.name" $ }}-admission
+{{ include "webhook-helm-mini.labels" $ | indent 4 }}
+webhooks:
+  - name: {{ template "webhook-helm-mini.fullname" . }}rulemutate.{{ template "webhook-helm-mini.namespace" . }}.com
+    failurePolicy: Ignore
+    rules:
+      - apiGroups:
+          - webhookmini.com
+        apiVersions:
+          - "*"
+        resources:
+          - prometheusrules
+        operations:
+          - CREATE
+          - UPDATE
+    clientConfig:
+      service:
+        namespace: {{ template "webhook-helm-mini.namespace" . }}
+        name: {{ template "webhook-helm-mini.fullname" . }}-operator
+        path: /admission-prometheusrules/validate
+    timeoutSeconds: 10
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None

@@ -1,0 +1,20 @@
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  name: {{ template "webhook-helm-mini.fullname" . }}-admission
+  labels:
+    app: {{ template "webhook-helm-mini.name" $ }}-admission
+{{ include "webhook-helm-mini.labels" $ | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "webhook-helm-mini.fullname" . }}-admission
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "webhook-helm-mini.fullname" . }}-admission
+    namespace: {{ template "webhook-helm-mini.namespace" . }}
