@@ -35,10 +35,9 @@ helm uninstall --namespace  ${Space} ${helmAppName}
 >- dep2.yaml # 测试验证用yaml
 
 2. webhook-helm-mini目录
->- main.go # 代码入口和 webhook validate 处理逻辑
->- mutate.go # webhook mutate 处理逻辑
->- Makefile # make文件，编译入口
->- Dockerfile # 镜像制作
+>- templates/admission-webhook/jobpath # 配置docker.io/sdedu/kube-webhook-certgen 镜像所需要的权限相关内容
+>- templates/admission-webhook # mutatingWebhookConfiguration,validatingWebhookConfiguration
+>- templates/admission-webhook/workload #验证ca，配置引用前置生成的secret内容 
 
 3. template-out-mini1目录 # helm template输出的文件，可以看到真正部署到的内容
 
