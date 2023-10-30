@@ -18,12 +18,8 @@ install:
 
 # 清理历史数据
 uninstall:
-	- kubectl delete ns ${Space} 
 	- helm uninstall --namespace  ${Space} ${helmAppName} 
-	- kubectl  delete ValidatingWebhookConfiguration ${helmAppName}-webhook-helm-mini-admission 
-	- kubectl  delete MutatingWebhookConfiguration ${helmAppName}-webhook-helm-mini-admission 
-	- kubectl  delete -n  ${Space} secret ${helmAppName}-webhook-helm-mini-admission
-	- kubectl -n  ${Space} get secret ${helmAppName}-webhook-helm-mini-admission -oyaml
+	- kubectl delete ns ${Space} 
 
 build-template:
 	rm -Rf template-out-${helmAppName}
@@ -46,7 +42,7 @@ checkrunok:
 	- kubectl create ns ns12
 	- kubectl label namespace ns12 webhook-mini=enabled
 	- kubectl create -n ns12 deployment dep1 --image=nginx --replicas=1 # 期望失败，因为没有相应的label
-	- kubectl delete -f dep2.yaml;kubectl apply -f dep2.yaml # kubectl create -n ns12 deployment dep2 --image=nginx --replicas=1 --dry-run -oyaml
+	- kubectl delete -f dep2.yaml;kubectl apply -f dep2.yaml # 期望成功
 
 # helm包打包
 helmpack:

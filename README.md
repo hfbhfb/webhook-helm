@@ -11,6 +11,9 @@
 3. kubectl create ns ${Space}
 4. touch values.yaml
 5. helm install webhook-helm-mini/ --namespace  ${Space} --values ./values.yaml --name-template ${helmAppName} 
+>- 最终会生成一个secret，存储证书信息
+>- ValidatingWebhookConfiguration,MutatingWebhookConfiguration 这两个资源会注入ca相关证书
+
 
 #### 部署-步骤3：测试
 1. kubectl delete ns ns12; kubectl create ns ns12; kubectl label namespace ns12 webhook-mini=enabled; # 准备命名空间
