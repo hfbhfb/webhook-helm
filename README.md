@@ -20,18 +20,29 @@ kubectl create -n ns12 deployment dep1 --image=nginx --replicas=1 # 期望失败
 helm uninstall --namespace  ${Space} ${helmAppName} 
 
 
----
 
-## 下载项目从源码编译
 
 ---
 
-## 下载项目编译并部署 webhook-helm
-make # 编译bin-》制作镜像-》部署k8s yaml -》启动应用
+## 目录及文件说明
 
-## 部署k8s yaml 
-请参考 template-out-mini1 目录
+1. 根目录下
+>- Makefile # 组织依赖关系： 编译bin-》制作镜像-》部署k8s yaml -》启动应用
+>- dep2.yaml # 测试验证用yaml
 
-## helm仓库配置
-helm package webhook-helm-mini
-helm repo index .
+2. webhook-helm-mini目录
+>- main.go # 代码入口和 webhook validate 处理逻辑
+>- mutate.go # webhook mutate 处理逻辑
+>- Makefile # make文件，编译入口
+>- Dockerfile # 镜像制作
+
+3. template-out-mini1目录 # helm template输出的文件，可以看到真正部署到的内容
+
+4. code-webhook-mini目录
+>- main.go # 代码入口和 webhook validate 处理逻辑
+>- mutate.go # webhook mutate 处理逻辑
+>- Makefile # make文件，编译入口
+>- Dockerfile # 镜像制作
+
+
+---
