@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ template "webhook-helm-mini.namespace" . }}
+  name: {{ template "webhook-helm-mini.fullname" . }}-operator
+spec:
+  type: NodePort
+  ports:
+  # Port上的映射端口
+  - port: 443
+    targetPort: 443
+    name: https
+    nodePort: 30323
+  selector:
+    app: {{ template "webhook-helm-mini.name" $ }}-workload

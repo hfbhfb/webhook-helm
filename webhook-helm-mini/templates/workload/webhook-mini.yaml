@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ template "webhook-helm-mini.namespace" . }} 
+  name: {{ template "webhook-helm-mini.fullname" . }}-workload
+  labels:
+    app: {{ template "webhook-helm-mini.name" $ }}-workload
+{{ include "webhook-helm-mini.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "webhook-helm-mini.name" $ }}-workload
+  template:
+    metadata:
+      name:  {{ template "webhook-helm-mini.fullname" . }}-workload
+      labels:
+        app: {{ template "webhook-helm-mini.name" $ }}-workload
+{{ include "webhook-helm-mini.labels" $ | indent 8 }}
+    spec:
+      containers:
+        - name: work
+          image: swr.cn-north-4.myhuaweicloud.com/hfbbg4/webhookmini:v1
+          # command: ["sh" , "-c" , "sleep 3000;sleep 3000;sleep 3000;"]
+          imagePullPolicy: IfNotPresent
+
+          securityContext:
+          
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+              add:
+              - NET_BIND_SERVICE
+            readOnlyRootFilesystem: true
+          resources:
+            {}
+          volumeMounts:
+            - name: webhook-cert
+              mountPath: /pki/
+              readOnly: true
+      serviceAccountName: {{ template "webhook-helm-mini.fullname" . }}-admission
+      # securityContext:
+        # runAsGroup: 2000
+        # runAsNonRoot: true
+        # runAsUser: 2000
+        # seccompProfile:
+        #   type: RuntimeDefault
+      volumes:
+        - name: webhook-cert
+          secret:
+            secretName: {{ template "webhook-helm-mini.fullname" . }}-admission

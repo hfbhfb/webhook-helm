@@ -10,21 +10,29 @@ metadata:
 webhooks:
   - name: {{ template "webhook-helm-mini.fullname" . }}rulemutate.{{ template "webhook-helm-mini.namespace" . }}.com
     failurePolicy: Ignore
+    # rules:
+    #   - apiGroups:
+    #       - webhookmini.com
+    #     apiVersions:
+    #       - "*"
+    #     resources:
+    #       - prometheusrules
+    #     operations:
+    #       - CREATE
+    #       - UPDATE
     rules:
-      - apiGroups:
-          - webhookmini.com
-        apiVersions:
-          - "*"
-        resources:
-          - prometheusrules
-        operations:
-          - CREATE
-          - UPDATE
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+    namespaceSelector:
+      matchLabels:
+        webhook-mini: enabled
     clientConfig:
       service:
         namespace: {{ template "webhook-helm-mini.namespace" . }}
         name: {{ template "webhook-helm-mini.fullname" . }}-operator
-        path: /admission-prometheusrules/validate
+        path: /validate
     timeoutSeconds: 10
     admissionReviewVersions: ["v1", "v1beta1"]
     sideEffects: None

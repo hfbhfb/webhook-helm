@@ -1,0 +1,61 @@
+---
+# Source: webhook-helm-mini/templates/workload/webhook-mini.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: webhookmini 
+  name: mini1-webhook-helm-mini-workload
+  labels:
+    app: webhook-helm-mini-workload
+    helm.sh/chart: webhook-helm-mini-0.1.0
+    app.kubernetes.io/name: webhook-helm-mini
+    app.kubernetes.io/instance: mini1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app: webhook-helm-mini-workload
+  template:
+    metadata:
+      name:  mini1-webhook-helm-mini-workload
+      labels:
+        app: webhook-helm-mini-workload
+        helm.sh/chart: webhook-helm-mini-0.1.0
+        app.kubernetes.io/name: webhook-helm-mini
+        app.kubernetes.io/instance: mini1
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      containers:
+        - name: work
+          image: swr.cn-north-4.myhuaweicloud.com/hfbbg4/webhookmini:v1
+          # command: ["sh" , "-c" , "sleep 3000;sleep 3000;sleep 3000;"]
+          imagePullPolicy: IfNotPresent
+
+          securityContext:
+          
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+              add:
+              - NET_BIND_SERVICE
+            readOnlyRootFilesystem: true
+          resources:
+            {}
+          volumeMounts:
+            - name: webhook-cert
+              mountPath: /pki/
+              readOnly: true
+      serviceAccountName: mini1-webhook-helm-mini-admission
+      # securityContext:
+        # runAsGroup: 2000
+        # runAsNonRoot: true
+        # runAsUser: 2000
+        # seccompProfile:
+        #   type: RuntimeDefault
+      volumes:
+        - name: webhook-cert
+          secret:
+            secretName: mini1-webhook-helm-mini-admission

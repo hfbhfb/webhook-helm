@@ -1,0 +1,24 @@
+---
+# Source: webhook-helm-mini/templates/admission-webhook/job-patch/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  name: mini1-webhook-helm-mini-admission
+  labels:
+    app: webhook-helm-mini-admission
+    helm.sh/chart: webhook-helm-mini-0.1.0
+    app.kubernetes.io/name: webhook-helm-mini
+    app.kubernetes.io/instance: mini1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: mini1-webhook-helm-mini-admission
+subjects:
+  - kind: ServiceAccount
+    name: mini1-webhook-helm-mini-admission
+    namespace: webhookmini

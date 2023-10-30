@@ -1,0 +1,42 @@
+---
+# Source: webhook-helm-mini/templates/admission-webhook/mutatingWebhookConfiguration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mini1-webhook-helm-mini-admission
+  labels:
+    app: webhook-helm-mini-admission
+    helm.sh/chart: webhook-helm-mini-0.1.0
+    app.kubernetes.io/name: webhook-helm-mini
+    app.kubernetes.io/instance: mini1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+  - name: mini1-webhook-helm-minirulemutate.webhookmini.com
+    failurePolicy: Ignore
+    # rules:
+    #   - apiGroups:
+    #       - webhookmini.com
+    #     apiVersions:
+    #       - "*"
+    #     resources:
+    #       - prometheusrules
+    #     operations:
+    #       - CREATE
+    #       - UPDATE
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+    namespaceSelector:
+      matchLabels:
+        webhook-mini: enabled
+    clientConfig:
+      service:
+        namespace: webhookmini
+        name: mini1-webhook-helm-mini-operator
+        path: /mutate
+    timeoutSeconds: 10
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None

@@ -1,0 +1,57 @@
+---
+# Source: webhook-helm-mini/templates/admission-webhook/job-patch/job-patchWebhook.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+
+  namespace: webhookmini
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded   
+  name: mini1-webhook-helm-mini-admission-patch
+  labels:
+    app: webhook-helm-mini-admission-patch
+    helm.sh/chart: webhook-helm-mini-0.1.0
+    app.kubernetes.io/name: webhook-helm-mini
+    app.kubernetes.io/instance: mini1
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  template:
+    metadata:
+      name:  mini1-webhook-helm-mini-admission-patch
+      labels:
+        app: webhook-helm-mini-admission-patch
+        helm.sh/chart: webhook-helm-mini-0.1.0
+        app.kubernetes.io/name: webhook-helm-mini
+        app.kubernetes.io/instance: mini1
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      containers:
+        - name: patch
+          image: docker.io/sdedu/kube-webhook-certgen:v20230407
+          imagePullPolicy: IfNotPresent
+          args:
+            - patch
+            - --webhook-name=mini1-webhook-helm-mini-admission
+            - --namespace=webhookmini
+            - --secret-name=mini1-webhook-helm-mini-admission
+            - --patch-failure-policy=
+          securityContext:
+          
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            {}
+      restartPolicy: OnFailure
+      serviceAccountName: mini1-webhook-helm-mini-admission
+      securityContext:
+        runAsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 2000
+        seccompProfile:
+          type: RuntimeDefault
