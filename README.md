@@ -60,3 +60,4 @@ helm uninstall --namespace  ${Space} ${helmAppName}
 
 <img src="imgdir/image-20231030170457826.png" alt="image-20231030170457826" style="zoom:50%;" />
 
+<img src="imgdir/image-20231030172817905.png" alt="image-20231030172817905" style="zoom:50%;" />
