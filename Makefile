@@ -44,4 +44,6 @@ checkrunok:
 	- kubectl create -n ns12 deployment dep1 --image=nginx --replicas=1 # 期望失败，因为没有相应的label
 	- kubectl delete -f dep2.yaml;kubectl apply -f dep2.yaml # kubectl create -n ns12 deployment dep2 --image=nginx --replicas=1 --dry-run -oyaml
 
-
+helmpack:
+	helm package webhook-helm-mini  # helm仓库配置
+	helm repo index .
