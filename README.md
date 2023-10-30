@@ -1,10 +1,10 @@
 
-## 部署-步骤1：直接使用helm仓库部署测试
+## 部署-步骤1：增加helm仓库并下载
 1. helm repo add webhook-helm https://hfbhfb.github.io/webhook-helm
 2. helm search repo webhook-helm -l
 3. helm pull webhook-helm/webhook-helm-mini  --untar --version 0.1.0
 
-#### 部署-步骤2：部署实例
+#### 部署-步骤2：部署helm实例
 
 1. helmAppName=mini1
 2. Space=webhookmini
@@ -15,8 +15,7 @@
 #### 部署-步骤3：测试
 1. kubectl delete ns ns12; kubectl create ns ns12; kubectl label namespace ns12 webhook-mini=enabled; # 准备命名空间
 2. kubectl create -n ns12 deployment dep1 --image=nginx --replicas=1 # 期望失败，因为没有相应的label
-
-#### kubectl apply -f dep2.yaml #项目下这个yaml是可成功部署的
+3. kubectl apply -f dep2.yaml **#项目下这个  dep2.yaml 是满足条件，期望是可成功部署的**
 
 #### 部署-步骤4：清理数据
 helm uninstall --namespace  ${Space} ${helmAppName} 
