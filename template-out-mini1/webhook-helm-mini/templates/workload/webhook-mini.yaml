@@ -48,7 +48,7 @@ spec:
             - name: webhook-cert
               mountPath: /pki/
               readOnly: true
-      serviceAccountName: mini1-webhook-helm-mini-admission
+      #serviceAccountName: mini1-webhook-helm-mini-admission # serviceAccountName 在hook完成后会被删除
       # securityContext:
         # runAsGroup: 2000
         # runAsNonRoot: true
