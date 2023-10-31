@@ -1,2 +1,4 @@
 
 replicaCount: 1
+
+image: swr.cn-north-4.myhuaweicloud.com/hfbbg4/webhookmini:v1
