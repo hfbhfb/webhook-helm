@@ -49,7 +49,6 @@ helmpack:
 	helm package webhook-helm-mini  # helm仓库配置
 	helm repo index .
 	git commit -a -m "helm包打包"
-	git checkout -b master
 	git push origin master
 	git checkout  gh-pages
 	git merge master

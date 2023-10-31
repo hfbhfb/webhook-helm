@@ -3,12 +3,12 @@ entries:
   webhook-helm-mini:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-10-31T14:41:15.523185+08:00"
+    created: "2023-10-31T14:41:34.636631+08:00"
     description: A Helm chart for Kubernetes
-    digest: d6388ea7e502e6d0688aa8d1a1080004a2e48ec34078cf68be423237e0ed6a9c
+    digest: 7add9015db2dbb5c11403961719affe7cdef4e2b4db172d197ea577a6a2d4649
     name: webhook-helm-mini
     type: application
     urls:
     - webhook-helm-mini-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-31T14:41:15.522149+08:00"
+generated: "2023-10-31T14:41:34.636044+08:00"
