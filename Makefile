@@ -51,9 +51,10 @@ helmpack:
 	git commit -a -m "helm包打包"
 	git checkout -b master
 	git push origin master
-	git checkout -b gh-pages
+	git checkout  gh-pages
+	git merge master
 	git push origin gh-pages
-	git checkout -b master # 切回master
+	git checkout master # 切回master
 
 
 	
